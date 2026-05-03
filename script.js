@@ -1,20 +1,38 @@
-// Cleaned-up and fixed code here without comments
+let equation = "";
 
-function add(a, b) {
-    return a + b;
+
+const display = document.getElementById("displayer");
+const calculateButton = document.getElementById("CalculateBtn");
+const symbols = document.querySelectorAll(".calcBtn");
+
+function Eval(expr) {
+  try {
+    const sanitized = expr
+      .replace(/÷/g, "/")
+      .replace(/X/g, "*")
+      .replace(/[^0-9+\-*/().]/g, ""); 
+
+    const result = Function(`"use strict"; return (${sanitized})`)();
+    return isFinite(result) ? result : "Error";
+  } catch {
+    return "Error";
+  }
 }
 
-function subtract(a, b) {
-    return a - b;
+function updateDisplay() {
+  if (display) display.textContent = equation;
 }
 
-function multiply(a, b) {
-    return a * b;
-}
 
-function divide(a, b) {
-    if (b === 0) {
-        throw new Error('Division by zero');
-    }
-    return a / b;
-}
+symbols.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    equation += btn.textContent;
+    updateDisplay();
+  });
+});
+
+calculateButton?.addEventListener("click", () => {
+  equation = String(Eval(equation));
+  updateDisplay();
+  equation = ""; 
+});
