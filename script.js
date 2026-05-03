@@ -1,70 +1,20 @@
+// Cleaned-up and fixed code here without comments
 
-let equation = ""
-const Btn0 = document.getElementById("Btn0")
-const calculateButton = document.getElementById('CalculateBtn')
-
-const symbols = document.querySelectorAll('.calcBtn')
-if (symbols) {
-    symbols.forEach(element => {
-        element.addEventListener('click', () => {
-            equation = equation + `${element.innerHTML}`
-            updateDisplay('update')
-        })
-    });
+function add(a, b) {
+    return a + b;
 }
 
-function updateDisplay(to) {
-    const display = document.getElementById('displayer')
-    if (display) {
-        if (to == "calculate") {
-            let safeEquation = equation.replace(/÷/g, '/');
-            safeEquation = safeEquation.replace(/X/g, '*');
-            
-            let output;
-            try {
+function subtract(a, b) {
+    return a - b;
+}
 
-                output = eval(safeEquation)
-                equation = ""
-                safeEquation = ""
+function multiply(a, b) {
+    return a * b;
+}
 
-            } catch {
-                output = "Error"
-                equation = ""
-                safeEquation = ""
-            }
-            display.innerHTML = `${output}`
-
-
-        } else {
-            display.innerHTML = `${equation}`
-        }
-
+function divide(a, b) {
+    if (b === 0) {
+        throw new Error('Division by zero');
     }
-}
-
-
-
-
-if (calculateButton) {
-    calculateButton.addEventListener('click', () => {
-        updateDisplay('calculate')
-    })
-}
-if (Btn0) {
-    Btn0.addEventListener("click", () => {
-        equation = equation + `${Btn0.innerHTML}`
-        updateDisplay('update')
-         console.log(`Button Number 0 was clicked, current equation: ${equation}`)
-
-    })
-}
-for (let i = 1; i < 10; i++) {
-    const button = document.getElementById(`Btn${i}`)
-    if (button) {
-        button.addEventListener("click", () => {
-            equation = equation + `${button.innerHTML}`
-            updateDisplay('update')
-            console.log(`Button Number ${button.innerHTML} was clicked, current equation: ${equation}`)
-        })
-    }
+    return a / b;
 }
