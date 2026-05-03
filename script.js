@@ -1,38 +1,70 @@
-let equation = "";
+let equation = ""
+const Btn0 = document.getElementById("Btn0")
+const calculateButton = document.getElementById('CalculateBtn')
 
-
-const display = document.getElementById("displayer");
-const calculateButton = document.getElementById("CalculateBtn");
-const symbols = document.querySelectorAll(".calcBtn");
-
-function Eval(expr) {
-  try {
-    const sanitized = expr
-      .replace(/÷/g, "/")
-      .replace(/X/g, "*")
-      .replace(/[^0-9+\-*/().]/g, ""); 
-
-    const result = Function(`"use strict"; return (${sanitized})`)();
-    return isFinite(result) ? result : "Error";
-  } catch {
-    return "Error";
-  }
+const symbols = document.querySelectorAll('.calcBtn')
+if (symbols) {
+    symbols.forEach(element => {
+        element.addEventListener('click', () => {
+            equation = equation + `${element.innerHTML}`
+            updateDisplay('update')
+        })
+    });
 }
 
-function updateDisplay() {
-  if (display) display.textContent = equation;
+function updateDisplay(to) {
+    const display = document.getElementById('displayer')
+    if (display) {
+        if (to == "calculate") {
+            let safeEquation = equation.replace(/÷/g, '/');
+            safeEquation = safeEquation.replace(/X/g, '*');
+            safeEquation = safeEquation.replace(/%/g, '/100');
+            
+            let output;
+            try {
+
+                output = eval(safeEquation)
+                equation = ""
+                safeEquation = ""
+
+            } catch {
+                output = "Error"
+                equation = ""
+                safeEquation = ""
+            }
+            display.innerHTML = `${output}`
+
+
+        } else {
+            display.innerHTML = `${equation}`
+        }
+
+    }
 }
 
 
-symbols.forEach((btn) => {
-  btn.addEventListener("click", () => {
-    equation += btn.textContent;
-    updateDisplay();
-  });
-});
 
-calculateButton?.addEventListener("click", () => {
-  equation = String(Eval(equation));
-  updateDisplay();
-  equation = ""; 
-});
+
+if (calculateButton) {
+    calculateButton.addEventListener('click', () => {
+        updateDisplay('calculate')
+    })
+}
+if (Btn0) {
+    Btn0.addEventListener("click", () => {
+        equation = equation + `${Btn0.innerHTML}`
+        updateDisplay('update')
+         console.log(`Button Number 0 was clicked, current equation: ${equation}`)
+
+    })
+}
+for (let i = 1; i < 10; i++) {
+    const button = document.getElementById(`Btn${i}`)
+    if (button) {
+        button.addEventListener("click", () => {
+            equation = equation + `${button.innerHTML}`
+            updateDisplay('update')
+            console.log(`Button Number ${button.innerHTML} was clicked, current equation: ${equation}`)
+        })
+    }
+}
